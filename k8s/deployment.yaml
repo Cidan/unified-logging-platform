@@ -1,0 +1,20 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: unified-logging
+  labels:
+    app: unified-logging
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: unified-logging
+  template:
+    metadata:
+      labels:
+        app: unified-logging
+    spec:
+      containers:
+      - name: unified-logging
+        image: chentex/random-logger
