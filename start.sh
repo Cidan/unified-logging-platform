@@ -17,7 +17,7 @@ function create-terraform {
 
 function start-random-logger {
 	gcloud container clusters get-credentials unified-logging --zone us-central1-a --project $PROJECT
-	kubectl apply -f k8s/deployment.yamnl
+	kubectl apply -f k8s/deployment.yaml
 }
 
 create-terraform

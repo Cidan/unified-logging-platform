@@ -20,7 +20,7 @@ resource "google_compute_instance_template" "unified-logging" {
   }
 
   network_interface {
-    subnetwork = "unified-logging"
+    subnetwork = "${google_compute_subnetwork.unified-logging.name}"
     access_config {}
   }
 
