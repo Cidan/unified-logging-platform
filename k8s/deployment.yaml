@@ -17,4 +17,7 @@ spec:
     spec:
       containers:
       - name: unified-logging
-        image: chentex/random-logger
+        image: us.gcr.io/{{PROJECT}}/logger-generator:latest
+        args:
+        - "10"
+        - "20"

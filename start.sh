@@ -8,6 +8,13 @@ if [[ $PROJECT == "" || $BUCKET == "" ]]; then
 	exit 1
 fi
 
+function create-container {
+	echo "Creating container image..."
+	cd logger
+	gcloud builds submit --config=cloudbuild.yaml --project=$PROJECT
+	cd ..
+}
+
 function create-terraform {
 	cd terraform/infrastructure
 	terraform init
@@ -17,8 +24,9 @@ function create-terraform {
 
 function start-random-logger {
 	gcloud container clusters get-credentials unified-logging --zone us-central1-a --project $PROJECT
-	kubectl apply -f k8s/deployment.yaml
+	sed "s/{{PROJECT}}/$PROJECT/" k8s/deployment.yaml | kubectl apply -f -
 }
 
+create-container
 create-terraform
 start-random-logger
