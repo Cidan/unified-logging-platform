@@ -19,5 +19,5 @@ spec:
       - name: unified-logging
         image: us.gcr.io/{{PROJECT}}/logger-generator:latest
         args:
-        - "10"
-        - "20"
+        - "1"
+        - "5"
