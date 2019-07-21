@@ -1,9 +1,11 @@
 package com.google;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.bigquery.model.TableRow;
+import com.google.api.services.bigquery.model.TimePartitioning;
 
 import org.apache.beam.runners.dataflow.options.DataflowPipelineOptions;
 import org.apache.beam.sdk.Pipeline;
@@ -72,6 +74,7 @@ public class UnifiedLogging {
       output.set("project_id", labels.getOrDefault("project_id", ""));
       output.set("zone", labels.getOrDefault("zone", ""));
       output.set("payload", decoded.getOrDefault("textPayload", ""));
+      output.set("uuid", UUID.randomUUID());
       // Set the raw string here.
       output.set("raw", data);
 
@@ -109,6 +112,7 @@ public class UnifiedLogging {
     .apply("Logs to BigQuery", BigQueryIO.writeTableRows()
       .to(projectName + ":unified_logging.logs")
       .withSchema(Helpers.generateSchema(Helpers.rawSchema))
+      .withTimePartitioning(new TimePartitioning().setType("DAY"))
       .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
       .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 

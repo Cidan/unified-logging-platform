@@ -18,6 +18,7 @@ public class Helpers {
     rawSchema.put("project_id", "STRING");
     rawSchema.put("zone", "STRING");
     rawSchema.put("payload", "STRING");
+    rawSchema.put("uuid", "STRING");
     rawSchema.put("raw", "STRING");
   }
   
