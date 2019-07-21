@@ -5,15 +5,20 @@ import com.google.api.services.bigquery.model.TableRow;
 
 import org.apache.beam.runners.dataflow.options.DataflowPipelineOptions;
 import org.apache.beam.sdk.Pipeline;
+import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.transforms.DoFn;
-import org.apache.beam.sdk.values.KV;
-import org.apache.beam.sdk.values.PCollection;
+import org.apache.beam.sdk.transforms.ParDo;
+import org.apache.beam.sdk.values.PCollectionTuple;
 import org.apache.beam.sdk.values.TupleTag;
+import org.apache.beam.sdk.values.TupleTagList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UnifiedLogging {
   static String projectName;
+  private static final Logger LOG = LoggerFactory.getLogger(UnifiedLogging.class);
   private static final ObjectMapper objectMapper = new ObjectMapper();
   
   static final TupleTag<TableRow> badData = new TupleTag<TableRow>(){
@@ -23,7 +28,7 @@ public class UnifiedLogging {
     private static final long serialVersionUID = 2136448626752693877L;
   };
 
-  static class DecodeMessage extends DoFn<String, KV<String,TableRow>> {
+  static class DecodeMessage extends DoFn<String, TableRow> {
     private static final long serialVersionUID = -8532541222456695376L;
 
     // This function will create a TableRow (BigQuery row) out of String data
@@ -39,11 +44,12 @@ public class UnifiedLogging {
     public void processElement(ProcessContext c) {
       // Get the JSON data as a string from our stream.
       String data = c.element();
-      TableRow output;
+      TableRow decoded;
+      TableRow output = new TableRow();
 
       // Attempt to decode our JSON data into a TableRow.
       try {
-        output = objectMapper.readValue(data, TableRow.class);
+        decoded = objectMapper.readValue(data, TableRow.class);
       } catch (Exception e) {
         // We were unable to decode the JSON, let's put this string
         // into a TableRow manually, without decoding it, so we can debug
@@ -51,25 +57,23 @@ public class UnifiedLogging {
         c.output(badData, createBadRow(data));
         return;
       }
-
-      // Incredibly simple validation of data -- we are simply making sure
-      // the event key exists in our decoded JSON. If it doesn't, it's bad data.
-      // If you need to validate your data stream, this would be the place to do it!
-      if (!output.containsKey("Name")) {
-        c.output(badData, createBadRow(data));        
+      
+      if (!decoded.containsKey("timestamp")) {
+        c.output(badData, createBadRow(data));
         return;
       }
 
-      // Output our good data twice to two different streams. rawData will eventually
-      // be directly inserted into BigQuery without any special processing, where as
-      // our other output (the "default" output), outputs a KV of (event, TableRow), where
-      // event is the name of our event. This allows us to do some easy rollups of our event
-      // data a bit further down.
-      c.output(rawData, output);
-      c.output(KV.of((String)output.get("Name"), output));
+      // TODO: set known fields here
+      output.set("timestamp", decoded.get("timestamp").toString());
+      
+      // Set the raw string here.
+      output.set("data", data);
+
+      // Output our log data
+      c.output(output);
     }
   }
-  
+
   public static void main(String[] args) {
     
     DataflowPipelineOptions options = PipelineOptionsFactory
@@ -86,11 +90,22 @@ public class UnifiedLogging {
 
     Pipeline p = Pipeline.create(options);
 
-    PCollection<String> pubsubStream = p
-      .apply("Read from Pub/Sub", PubsubIO
+    PCollectionTuple decoded = p
+      .apply("Read from Pubsub", PubsubIO
         .readStrings()
-      .fromSubscription(subscription));
+        .fromSubscription(subscription))
+      .apply("Parse JSON", ParDo
+      .of(new DecodeMessage())
+        .withOutputTags(rawData, TupleTagList
+          .of(badData)));
     
+    decoded.get(rawData)
+    .apply("Logs to BigQuery", BigQueryIO.writeTableRows()
+      .to(projectName + ":unified_logging.logs")
+      .withSchema(Helpers.generateSchema(Helpers.rawSchema))
+      .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
+      .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
+
     p.run();
   }
 }

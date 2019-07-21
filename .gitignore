@@ -1,5 +1,6 @@
 vendor/
 /generate
+/beam/unified-logging/test.sh
 /beam/unified-logging/target
 /beam/unified-logging/test
 /beam/unified-logging/.settings/**
