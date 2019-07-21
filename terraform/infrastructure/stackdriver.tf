@@ -5,8 +5,7 @@ resource "google_logging_project_sink" "unified-logging" {
     unique_writer_identity = true
 }
 
-resource "google_pubsub_topic_iam_binding" "binding" {
-    topic       = "${google_pubsub_topic.unified-logging.name}"
-    role        = "roles/pubsub.publisher"
-    members     = ["serviceAccount:${google_logging_project_sink.unified-logging.writer_identity}"]
+resource "google_project_iam_binding" "log-writer" {
+    role = "roles/pubsub.publisher"
+    members = ["${google_logging_project_sink.unified-logging.writer_identity}"]
 }

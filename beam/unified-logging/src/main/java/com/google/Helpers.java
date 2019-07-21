@@ -14,7 +14,11 @@ public class Helpers {
   static {
     rawSchema = new HashMap<String, String>();
     rawSchema.put("timestamp", "TIMESTAMP");
-    rawSchema.put("data", "STRING");
+    rawSchema.put("resource_type", "STRING");
+    rawSchema.put("project_id", "STRING");
+    rawSchema.put("zone", "STRING");
+    rawSchema.put("payload", "STRING");
+    rawSchema.put("raw", "STRING");
   }
   
   public static TableSchema generateSchema(Map<String,String> fi) {

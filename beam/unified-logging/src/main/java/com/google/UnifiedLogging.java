@@ -1,5 +1,7 @@
 package com.google;
 
+import java.util.HashMap;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.bigquery.model.TableRow;
 
@@ -13,12 +15,9 @@ import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.values.PCollectionTuple;
 import org.apache.beam.sdk.values.TupleTag;
 import org.apache.beam.sdk.values.TupleTagList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class UnifiedLogging {
   static String projectName;
-  private static final Logger LOG = LoggerFactory.getLogger(UnifiedLogging.class);
   private static final ObjectMapper objectMapper = new ObjectMapper();
   
   static final TupleTag<TableRow> badData = new TupleTag<TableRow>(){
@@ -65,9 +64,16 @@ public class UnifiedLogging {
 
       // TODO: set known fields here
       output.set("timestamp", decoded.get("timestamp").toString());
-      
+      HashMap<String, Object> resource =
+        (HashMap<String, Object>) decoded.getOrDefault("resource", new HashMap<String, Object>());
+      HashMap<String, Object> labels =
+        (HashMap<String, Object>) resource.getOrDefault("labels", new HashMap<String, Object>());
+      output.set("resource_type", resource.getOrDefault("type", ""));
+      output.set("project_id", labels.getOrDefault("project_id", ""));
+      output.set("zone", labels.getOrDefault("zone", ""));
+      output.set("payload", decoded.getOrDefault("textPayload", ""));
       // Set the raw string here.
-      output.set("data", data);
+      output.set("raw", data);
 
       // Output our log data
       c.output(output);
