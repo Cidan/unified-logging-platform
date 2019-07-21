@@ -3,6 +3,7 @@ package com.google;
 import java.util.HashMap;
 import java.util.UUID;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TimePartitioning;
@@ -74,8 +75,12 @@ public class UnifiedLogging {
       output.set("project_id", labels.getOrDefault("project_id", ""));
       output.set("zone", labels.getOrDefault("zone", ""));
       output.set("text_payload", decoded.getOrDefault("textPayload", ""));
-      output.set("json_payload", decoded.getOrDefault("jsonPayload", ""));
-      output.set("proto_payload", decoded.getOrDefault("protoPayload", ""));
+      try {
+        output.set("json_payload", objectMapper.writeValueAsString(decoded.getOrDefault("jsonPayload", "")));
+        output.set("proto_payload", objectMapper.writeValueAsString(decoded.getOrDefault("protoPayload", "")));
+      } catch (JsonProcessingException e) {
+        e.printStackTrace();
+  	  }
       output.set("uuid", UUID.randomUUID());
       // Set the raw string here.
       output.set("raw", data);
