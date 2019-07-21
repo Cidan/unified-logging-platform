@@ -73,7 +73,9 @@ public class UnifiedLogging {
       output.set("resource_type", resource.getOrDefault("type", ""));
       output.set("project_id", labels.getOrDefault("project_id", ""));
       output.set("zone", labels.getOrDefault("zone", ""));
-      output.set("payload", decoded.getOrDefault("textPayload", ""));
+      output.set("text_payload", decoded.getOrDefault("textPayload", ""));
+      output.set("json_payload", decoded.getOrDefault("jsonPayload", ""));
+      output.set("proto_payload", decoded.getOrDefault("protoPayload", ""));
       output.set("uuid", UUID.randomUUID());
       // Set the raw string here.
       output.set("raw", data);
