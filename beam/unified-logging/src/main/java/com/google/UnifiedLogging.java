@@ -41,6 +41,7 @@ public class UnifiedLogging {
     }
 
     // Our main decoder function.
+    @SuppressWarnings("unchecked")
     @ProcessElement
     public void processElement(ProcessContext c) {
       // Get the JSON data as a string from our stream.
@@ -64,7 +65,6 @@ public class UnifiedLogging {
         return;
       }
 
-      // TODO: set known fields here
       output.set("timestamp", decoded.get("timestamp").toString());
       HashMap<String, Object> resource =
         (HashMap<String, Object>) decoded.getOrDefault("resource", new HashMap<String, Object>());
