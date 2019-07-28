@@ -3,11 +3,6 @@
     "fields": [
       {
         "mode": "NULLABLE",
-        "name": "uuid",
-        "type": "STRING"
-      },
-      {
-        "mode": "NULLABLE",
         "name": "alternateId",
         "type": "STRING"
       },
