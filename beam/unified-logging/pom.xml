@@ -151,6 +151,13 @@
   </build>
 
   <dependencies>
+<!-- https://mvnrepository.com/artifact/org.apache.flume/flume-ng-core -->
+<dependency>
+    <groupId>org.apache.flume</groupId>
+    <artifactId>flume-ng-core</artifactId>
+    <bundleFileName>source</bundleFileName>
+    <version>1.9.0</version>
+</dependency>
   <!-- https://mvnrepository.com/artifact/org.apache.beam/beam-sdks-java-core -->
 <dependency>
     <groupId>org.apache.beam</groupId>
