@@ -1,5 +1,7 @@
 #!/bin/bash
 set -e
+set -u
+
 PROJECT=$1
 BUCKET=$2
 

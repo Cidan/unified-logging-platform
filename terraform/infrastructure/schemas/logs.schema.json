@@ -1,0 +1,47 @@
+[
+  {
+    "mode": "REQUIRED",
+    "name": "timestamp",
+    "type": "TIMESTAMP"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "resource_type",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "project_id",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "zone",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "text_payload",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "json_payload",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "proto_payload",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "uuid",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "raw",
+    "type": "STRING"
+  }
+]

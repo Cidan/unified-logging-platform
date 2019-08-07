@@ -14,3 +14,14 @@ resource "google_bigquery_table" "okta" {
 
   schema = "${file("./schemas/okta.schema.json")}"
 }
+
+resource "google_bigquery_table" "logg" {
+  dataset_id = "${google_bigquery_dataset.unified-logging.dataset_id}"
+  table_id   = "okta"
+
+  time_partitioning {
+    type = "DAY"
+  }
+
+  schema = "${file("./schemas/unified-logging.schema.json")}"
+}

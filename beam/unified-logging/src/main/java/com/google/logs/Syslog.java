@@ -12,6 +12,7 @@ import org.apache.beam.sdk.values.TupleTag;
 import org.apache.flume.Event;
 import org.apache.flume.source.SyslogParser;
 
+// TODO: Never used.
 public class Syslog {
   
   static final TupleTag<TableRow> badData = new TupleTag<TableRow>(){

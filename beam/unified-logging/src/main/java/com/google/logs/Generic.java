@@ -8,6 +8,7 @@ import com.google.api.services.bigquery.model.TableRow;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.values.TupleTag;
 
+// TODO: Never used.
 public class Generic {
   private static final ObjectMapper objectMapper = new ObjectMapper();
   

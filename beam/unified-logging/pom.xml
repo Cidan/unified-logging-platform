@@ -149,7 +149,7 @@
       </plugins>
     </pluginManagement>
   </build>
-
+<!-- TODO: quite a few of unused dependencies. Needs clean up. -->
   <dependencies>
 <!-- https://mvnrepository.com/artifact/org.apache.flume/flume-ng-core -->
 <dependency>
