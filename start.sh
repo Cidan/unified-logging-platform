@@ -38,12 +38,15 @@ function start-random-logger {
 
 function create-dataflow-template {
 	cd beam/unified-logging
+	TEMPLATE_DIR=${BUCKET}/dataflow-template
 	mvn compile exec:java \
 	-Dexec.mainClass=com.google.UnifiedLogging \
 	-Dexec.args="--runner=DataflowRunner \
   --project=$PROJECT \
   --stagingLocation=gs://$BUCKET/dataflow-staging \
-  --templateLocation=gs://$BUCKET/dataflow-template/unified-logging"
+  --templateLocation=gs://${TEMPLATE_DIR}/unified-logging"
+
+  gsutil cp src/main/metadata/unified-logging.json_metadata gs://${TEMPLATE_DIR}/
 	cd ../../
 }
 
