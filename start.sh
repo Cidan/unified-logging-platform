@@ -10,6 +10,19 @@ if [[ $PROJECT == "" || $BUCKET == "" ]]; then
 	exit 1
 fi
 
+# Create unique bucket name
+BUCKET=${PROJECT}-${BUCKET}
+
+function enable-apis {
+  echo "Enabling required APIs for project ${PROJECT} ..."
+  gcloud services enable cloudbuild.googleapis.com
+  gcloud services enable storage-component.googleapis.com
+  gcloud services enable containerregistry.googleapis.com
+  gcloud services enable container.googleapis.com
+  gcloud services enable dataflow.googleapis.com
+  gcloud services enable cloudtrace.googleapis.com
+}
+
 function create-container {
 	echo "Creating container image..."
 	cd logger
@@ -39,7 +52,7 @@ function start-random-logger {
 function create-dataflow-template {
 	cd beam/unified-logging
 	TEMPLATE_DIR=${BUCKET}/dataflow-template
-	mvn compile exec:java \
+	mvn test exec:java \
 	-Dexec.mainClass=com.google.UnifiedLogging \
 	-Dexec.args="--runner=DataflowRunner \
   --project=$PROJECT \
@@ -50,8 +63,10 @@ function create-dataflow-template {
 	cd ../../
 }
 
-create-container
+#gcloud config set project ${PROJECT}
+#enable-apis
+#create-container
 create-terraform
 create-dataflow-template
-start-random-logger
+#start-random-logger
 start-dataflow

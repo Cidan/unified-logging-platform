@@ -14,7 +14,10 @@
     {
       "name": "subscriptionName",
       "label": "Name of the PubSub subscription",
-      "help_text": "Example: unified-logging-sub",
+      "help_text": "Example: projects/my-project-id/subscriptions/subscription-name",
+      "regexes": [
+        "^projects/.*/subscriptions/.*$"
+      ],
       "is_optional": false
     }
   ]

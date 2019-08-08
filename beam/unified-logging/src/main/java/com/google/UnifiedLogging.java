@@ -1,7 +1,6 @@
 package com.google;
 
 import com.google.api.services.bigquery.model.TableRow;
-import com.google.api.services.bigquery.model.TimePartitioning;
 import org.apache.beam.runners.dataflow.options.DataflowPipelineOptions;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
@@ -29,38 +28,34 @@ public class UnifiedLogging {
         .as(Options.class);
 
     String projectName = options.getProject();
-    String subscriptionName = options.getSubscriptionName().get();
-
-    String subscription = "projects/"
-        + projectName
-        + "/subscriptions/"
-        + subscriptionName;
 
     Pipeline p = Pipeline.create(options);
 
     PCollectionTuple logProcessingOutcome = p
-        .apply("Read from Pubsub", PubsubIO
+        .apply("Read from PubSub", PubsubIO
             .readStrings()
-            .fromSubscription(subscription))
-        .apply("Transform Log Entry into TableRow", ParDo
+            .fromSubscription(options.getSubscriptionName()))
+        .apply("Transform LogEntry into TableRow", ParDo
             .of(new LogToTableRowTransformer())
             .withOutputTags(LogToTableRowTransformer.cleanData, TupleTagList
                 .of(LogToTableRowTransformer.badData)));
 
     // TODO: Technically, streaming BQ writes can fail too. We can use withFailedInsertRetryPolicy to catch those and write to a GCS.
     // TODO: But it might be getting into the weeds a bit...
-    PCollection<TableRow> cleanLogRows = logProcessingOutcome.get(LogToTableRowTransformer.cleanData);
+    PCollection<TableRow> cleanLogRows = logProcessingOutcome
+        .get(LogToTableRowTransformer.cleanData);
     cleanLogRows
         .apply("Store Clean Logs to BigQuery", BigQueryIO.writeTableRows()
             .to(options.getOutputTable())
             .withCreateDisposition(CreateDisposition.CREATE_NEVER)
             .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 
-    // TODO: deal with badData. Probably better to rename cleanData into cleanData or something along those lines.
+    // TODO: deal with badData.
     p.run();
   }
 
   public interface Options extends DataflowPipelineOptions {
+
     @Validation.Required
     @Description("Subscription name")
     ValueProvider<String> getSubscriptionName();
