@@ -64,8 +64,8 @@ function create-dataflow-template {
 }
 
 function display-data {
-  echo "Pausing for a minute before querying the data, but might be not enough..."
-  sleep 60
+  echo "Pausing for two minutes before querying the data, but might be not enough..."
+  sleep 2*60
   bq query 'SELECT resource_type, COUNT(*) AS number_of_logs FROM unified_logging.logs GROUP BY resource_type'
 }
 
