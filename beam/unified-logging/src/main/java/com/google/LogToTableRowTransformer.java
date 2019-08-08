@@ -59,20 +59,20 @@ class LogToTableRowTransformer extends DoFn<String, TableRow> {
     output.set("project_id", logEntry.getResource().getLabels().get("project_id"));
     output.set("zone", logEntry.getResource().getLabels().get("zone"));
     output.set("text_payload", logEntry.getTextPayload());
-    output.set("json_payload", convertMapToJson(logEntry.getJsonPayload()));
-    output.set("proto_payload", convertMapToJson(logEntry.getProtoPayload()));
+    output.set("json_payload", convertMapToString(logEntry.getJsonPayload()));
+    output.set("proto_payload", convertMapToString(logEntry.getProtoPayload()));
     output.set("raw", data);
     output.set("uuid", UUID.randomUUID());
 
     c.output(cleanData, output);
   }
 
-  private static GenericJson convertMapToJson(Map<String, Object> objectMap) {
+  private static String convertMapToString(Map<String, Object> objectMap) {
     if(objectMap == null) {
       return null;
     }
     GenericJson result = new GenericJson();
     result.putAll(objectMap);
-    return result;
+    return result.toString();
   }
 }
