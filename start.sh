@@ -63,10 +63,18 @@ function create-dataflow-template {
 	cd ../../
 }
 
-#gcloud config set project ${PROJECT}
-#enable-apis
-#create-container
+function display-data {
+  echo "Pausing for a minute before querying the data, but might be not enough..."
+  sleep 60
+  bq query 'SELECT resource_type, COUNT(*) AS number_of_logs FROM unified_logging.logs GROUP BY resource_type'
+}
+
+
+gcloud config set project ${PROJECT}
+enable-apis
+create-container
 create-terraform
 create-dataflow-template
-#start-random-logger
+start-random-logger
 start-dataflow
+display-data
