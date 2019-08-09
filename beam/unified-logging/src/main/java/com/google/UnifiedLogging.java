@@ -30,25 +30,24 @@ public class UnifiedLogging {
     Pipeline p = Pipeline.create(options);
 
     PCollectionTuple logProcessingOutcome = p
-        .apply("Read from PubSub", PubsubIO
-            .readStrings()
-            .fromSubscription(options.getSubscriptionName()))
-        .apply("Transform LogEntry into TableRow", ParDo
-            .of(new LogToTableRowTransformer())
-            .withOutputTags(LogToTableRowTransformer.cleanData, TupleTagList
-                .of(LogToTableRowTransformer.badData)));
+        .apply("Read from PubSub",
+            PubsubIO.readStrings().fromSubscription(options.getSubscriptionName()))
+        .apply("Transform LogEntry into TableRow",
+            ParDo.of(new LogToTableRowTransformer())
+                .withOutputTags(
+                    LogToTableRowTransformer.cleanData,
+                    TupleTagList.of(LogToTableRowTransformer.badData)));
 
-    // TODO: Technically, streaming BQ writes can fail too. We can use withFailedInsertRetryPolicy to catch those and write to a GCS.
-    // TODO: But it might be getting into the weeds a bit...
     PCollection<TableRow> cleanLogRows = logProcessingOutcome
         .get(LogToTableRowTransformer.cleanData);
-    cleanLogRows
-        .apply("Store Clean Logs to BigQuery", BigQueryIO.writeTableRows()
-            .to(options.getOutputTable())
-            .withCreateDisposition(CreateDisposition.CREATE_NEVER)
-            .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 
-    // In a real application the badData from logProcessingOutcome would also need to be stored.
+    cleanLogRows
+        .apply("Store Clean Logs to BigQuery",
+            BigQueryIO.writeTableRows().to(options.getOutputTable())
+                .withCreateDisposition(CreateDisposition.CREATE_NEVER)
+                .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
+
+    // In a real application badData from logProcessingOutcome also need to be stored.
     // We omitted the code, which would be very similar to the block above, for brevity.
     p.run();
   }
