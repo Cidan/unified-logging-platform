@@ -27,8 +27,6 @@ public class UnifiedLogging {
         .withValidation()
         .as(Options.class);
 
-    String projectName = options.getProject();
-
     Pipeline p = Pipeline.create(options);
 
     PCollectionTuple logProcessingOutcome = p
@@ -50,7 +48,8 @@ public class UnifiedLogging {
             .withCreateDisposition(CreateDisposition.CREATE_NEVER)
             .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 
-    // TODO: deal with badData.
+    // In a real application the badData from logProcessingOutcome would also need to be stored.
+    // We omitted the code, which would be very similar to the block above, for brevity.
     p.run();
   }
 

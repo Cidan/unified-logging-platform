@@ -1,5 +1,9 @@
 package com.google;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.google.api.services.bigquery.model.TableRow;
 import java.util.UUID;
 import org.apache.beam.sdk.io.TextIO;
@@ -10,7 +14,6 @@ import org.apache.beam.sdk.transforms.SerializableFunction;
 import org.apache.beam.sdk.values.PCollection;
 import org.apache.beam.sdk.values.PCollectionTuple;
 import org.apache.beam.sdk.values.TupleTagList;
-import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -40,11 +43,14 @@ public class LogToTableRowTransformerTest {
           assertEquals("container", row.get("resource_type"));
           assertEquals("universal-logging-test", row.get("project_id"));
           assertEquals("us-central1-a", row.get("zone"));
-          assertEquals("2019-08-08T00:41:27+0000 WARN A warning that should be ignored is usually at this level and should be actionable.\n", row.get("text_payload"));
+          assertEquals(
+              "2019-08-08T00:41:27+0000 WARN A warning that should be ignored is usually at this level and should be actionable.\n",
+              row.get("text_payload"));
           assertNull(row.get("json_payload"));
           assertNull(row.get("proto_payload"));
           assertTrue(row.get("raw").toString().startsWith("{\"insertId\":\"fju5h6g6h9cdwu\""));
-          assertEquals("Testing for valid UUID", 4, UUID.fromString(row.get("uuid").toString()).version());
+          assertEquals("Testing for valid UUID", 4,
+              UUID.fromString(row.get("uuid").toString()).version());
           return null;
         });
 
