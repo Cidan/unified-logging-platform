@@ -1,0 +1,24 @@
+{
+  "name": "Unified logging processing",
+  "description": "Processes logging data into BiqQuery",
+  "parameters": [
+    {
+      "name": "outputTable",
+      "label": "The fully qualified BigQuery table",
+      "help_text": "Example: my-project:my-dataset.my-table",
+      "regexes": [
+        "^.*:.*.*$"
+      ],
+      "is_optional": false
+    },
+    {
+      "name": "subscriptionName",
+      "label": "Name of the PubSub subscription",
+      "help_text": "Example: projects/my-project-id/subscriptions/subscription-name",
+      "regexes": [
+        "^projects/.*/subscriptions/.*$"
+      ],
+      "is_optional": false
+    }
+  ]
+}

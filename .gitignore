@@ -13,3 +13,5 @@ vendor/
 .vscode
 *tfstate*
 *.tar.gz
+.idea
+*.iml

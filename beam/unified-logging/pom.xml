@@ -15,8 +15,8 @@
   ~ the License.
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.google</groupId>
@@ -128,7 +128,8 @@
                 </filter>
               </filters>
               <transformers>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                <transformer
+                  implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
               </transformers>
             </configuration>
           </execution>
@@ -149,65 +150,42 @@
       </plugins>
     </pluginManagement>
   </build>
-
   <dependencies>
-<!-- https://mvnrepository.com/artifact/org.apache.flume/flume-ng-core -->
-<dependency>
-    <groupId>org.apache.flume</groupId>
-    <artifactId>flume-ng-core</artifactId>
-    <version>1.9.0</version>
-</dependency>
-  <!-- https://mvnrepository.com/artifact/org.apache.beam/beam-sdks-java-core -->
-<dependency>
-    <groupId>org.apache.beam</groupId>
-    <artifactId>beam-sdks-java-core</artifactId>
-    <version>${beam.version}</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/org.apache.beam/beam-runners-google-cloud-dataflow-java -->
-<dependency>
-    <groupId>org.apache.beam</groupId>
-    <artifactId>beam-runners-google-cloud-dataflow-java</artifactId>
-    <version>${beam.version}</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/org.apache.beam/beam-sdks-java-io-google-cloud-platform -->
-<dependency>
-    <groupId>org.apache.beam</groupId>
-    <artifactId>beam-sdks-java-io-google-cloud-platform</artifactId>
-    <version>${beam.version}</version>
-</dependency>
-
-<dependency>
-   <groupId>org.apache.beam</groupId>
-   <artifactId>beam-runners-direct-java</artifactId>
-   <version>${beam.version}</version>
-   <scope>runtime</scope>
-</dependency>
-
-<!-- https://mvnrepository.com/artifact/org.apache.beam/beam-sdks-java-io-kafka -->
-<dependency>
-    <groupId>org.apache.beam</groupId>
-    <artifactId>beam-sdks-java-io-kafka</artifactId>
-    <version>${beam.version}</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/org.apache.beam/beam-sdks-java-io-parquet -->
-<dependency>
-    <groupId>org.apache.beam</groupId>
-    <artifactId>beam-sdks-java-io-parquet</artifactId>
-    <version>${beam.version}</version>
-</dependency>
-
-<!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
-<dependency>
-    <groupId>org.apache.kafka</groupId>
-    <artifactId>kafka-clients</artifactId>
-    <version>0.10.1.0</version>
-</dependency>
-
-<dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-databind</artifactId>
-    <version>2.7.5</version>
-</dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.flume/flume-ng-core -->
+    <dependency>
+      <groupId>org.apache.flume</groupId>
+      <artifactId>flume-ng-core</artifactId>
+      <version>1.9.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.beam/beam-sdks-java-core -->
+    <dependency>
+      <groupId>org.apache.beam</groupId>
+      <artifactId>beam-sdks-java-core</artifactId>
+      <version>${beam.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.beam/beam-runners-google-cloud-dataflow-java -->
+    <dependency>
+      <groupId>org.apache.beam</groupId>
+      <artifactId>beam-runners-google-cloud-dataflow-java</artifactId>
+      <version>${beam.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.beam/beam-sdks-java-io-google-cloud-platform -->
+    <dependency>
+      <groupId>org.apache.beam</groupId>
+      <artifactId>beam-sdks-java-io-google-cloud-platform</artifactId>
+      <version>${beam.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-logging</artifactId>
+      <version>v2-rev634-1.25.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.beam</groupId>
+      <artifactId>beam-runners-direct-java</artifactId>
+      <version>${beam.version}</version>
+      <scope>runtime</scope>
+    </dependency>
     <!-- Dependencies below this line are specific dependencies needed by the examples code. -->
     <dependency>
       <groupId>com.google.api-client</groupId>
@@ -266,12 +244,6 @@
     </dependency>
 
     <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>${joda.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>${guava.version}</version>
@@ -298,12 +270,14 @@
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-all</artifactId>
       <version>${hamcrest.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
