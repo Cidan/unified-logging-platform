@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: unified-logging
-        image: us.gcr.io/{{PROJECT}}/logger-generator:latest
+        image: us.gcr.io/$PROJECT_ID/logger-generator:latest
         args:
         - "1"
         - "5"
